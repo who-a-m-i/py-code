@@ -484,19 +484,75 @@ Created on 2018年5月3日
 '''
 22.闭包
 '''
+# 
+# def adder(x):
+#     def wrapper(y):
+#         return x + y
+#     return wrapper
+# 
+# adder5 = adder(5)
+# # 输出 15
+# print(adder5(10))
+# # 输出 11
+# print(adder5(6))
+# 
+# #__closure__判断是否为闭包
+# print(adder.__closure__)
+# print(adder5.__closure__)
+# print(adder5.__closure__[0].cell_contents)
 
-def adder(x):
-    def wrapper(y):
-        return x + y
-    return wrapper
+'''
+23.执行顺序
+'''
+#经典类(深度优先)
+# class P1:     
+#      def foo(self):               
+#          print 'p1-foo'     
+#       
+# class P2 :     
+#      def foo(self):     
+#          print 'p2-foo'     
+#      
+#      def bar(self):     
+#          print 'p2-bar'     
+#       
+# class C1 (P1,P2):     
+#      pass      
+#       
+# class C2 (P1,P2):     
+#      def bar(self):     
+#          print 'C2-bar'       
+#       
+# class D(C1,C2):     
+#      pass     
+# 
+# d = D()
+# d.foo() # 输出 p1-foo     
+# d.bar() # 输出 p2-bar
 
-adder5 = adder(5)
-# 输出 15
-print(adder5(10))
-# 输出 11
-print(adder5(6))
-
-#__closure__判断是否为闭包
-print(adder.__closure__)
-print(adder5.__closure__)
-print(adder5.__closure__[0].cell_contents)
+#新式类(广度优先)
+# class P1(object):     
+#      def foo(self):               
+#          print 'p1-foo'     
+#       
+# class P2(object):    
+#      def foo(self):     
+#          print 'p2-foo'     
+#      
+#      def bar(self):     
+#          print 'p2-bar'     
+#       
+# class C1 (P1,P2):     
+#      pass      
+#       
+# class C2 (P1,P2):     
+#      def bar(self):     
+#          print 'C2-bar'       
+#       
+# class D(C1,C2):     
+#      pass     
+#  
+# print(D.__mro__)
+# d=D()     
+# d.foo() # 输出 p1-foo
+# d.bar() # 输出 c2-bar  
