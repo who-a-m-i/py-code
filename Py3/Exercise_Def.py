@@ -194,6 +194,10 @@ __getattr__
 #     
 # print(Chain().api.server.user("point").timeline.api)
 
+
+'''
+classmethod
+'''
 class A(object):
     def __init__(self, a=1):
         self.a = a
