@@ -176,20 +176,49 @@ __getattr__
 # print(Chain().status.user.timeline.list)
 
 
-class Chain(object):
-    
-    def __init__(self,path=''):
-        self._path = path
-    
-    def __call__(self, param):
-        return Chain("%s/:%s" % (self._path, param))
-    
-    def __getattr__(self, path):
-        return Chain("%s/%s" % (self._path, path))
-    
-    def __str__(self):
-        return self._path
-    
-    __repr__ = __str__
-    
-print(Chain().api.server.user("point").timeline.api)
+# class Chain(object):
+#     
+#     def __init__(self,path=''):
+#         self._path = path
+#     
+#     def __call__(self, param):
+#         return Chain("%s/:%s" % (self._path, param))
+#     
+#     def __getattr__(self, path):
+#         return Chain("%s/%s" % (self._path, path))
+#     
+#     def __str__(self):
+#         return self._path
+#     
+#     __repr__ = __str__
+#     
+# print(Chain().api.server.user("point").timeline.api)
+
+class A(object):
+    def __init__(self, a=1):
+        self.a = a
+
+    @classmethod
+    def put(cls, a):
+        return cls(a)
+
+    def get(self):
+        print(self.a)
+Exercise_Def
+B = A.put(1)
+B.get()
+
+B = A(2)
+B.get()
+B.put(3)
+B.get()
+
+print('---', B.a)
+C = B.put(3)
+print('---', C.a)
+C.get()
+C.a = 5
+C.get()
+
+D = C.put(6)
+D.get()
