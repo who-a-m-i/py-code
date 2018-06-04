@@ -373,77 +373,134 @@ Created on 2018年5月3日
 20.metaclass(元类)
 '''
 
-class Field(object):
+# class Field(object):
+# 
+#     def __init__(self, name, column_type):
+#         self.name = name
+#         self.column_type = column_type
+# 
+#     def __str__(self):
+#         return '<%s:%s>' % (self.__class__.__name__, self.name)
+# 
+# class StringField(Field):
+# 
+#     def __init__(self, name):
+#         super(StringField, self).__init__(name, 'varchar(100)')
+# 
+# class IntegerField(Field):
+# 
+#     def __init__(self, name):
+#         super(IntegerField, self).__init__(name, 'bigint')
+# 
+# class ModelMetaclass(type):
+# 
+#     def __new__(cls, name, bases, attrs):
+#         if name=='Model':
+#             return type.__new__(cls, name, bases, attrs)
+#         print('Found model: %s' % name)
+#         mappings = dict()
+#         for k, v in attrs.items():
+#             if isinstance(v, Field):
+#                 print('Found mapping: %s ==> %s' % (k, v))
+#                 mappings[k] = v
+#         for k in mappings.keys():
+#             attrs.pop(k)
+#         attrs['__mappings__'] = mappings # 保存属性和列的映射关系
+#         attrs['__table__'] = name # 假设表名和类名一致
+#         return type.__new__(cls, name, bases, attrs)
+# 
+# class Model(dict, metaclass=ModelMetaclass):
+# 
+#     def __init__(self, **kw):
+#         super(Model, self).__init__(**kw)
+# 
+#     def __getattr__(self, key):
+#         try:
+#             return self[key]
+#         except KeyError:
+#             raise AttributeError(r"'Model' object has no attribute '%s'" % key)
+# 
+#     def __setattr__(self, key, value):
+#         self[key] = value
+# 
+#     def save(self):
+#         fields = []
+#         params = []
+#         args = []
+#         for k, v in self.__mappings__.items():
+#             fields.append(v.name)
+#             params.append('?')
+#             args.append(getattr(self, k, None))
+#         sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
+#         print('SQL: %s' % sql)
+#         print('ARGS: %s' % str(args))
+#         
+#         
+# class User(Model):
+#     # 定义类的属性到列的映射：
+#     id = IntegerField('id')
+#     name = StringField('username')
+#     email = StringField('email')
+#     password = StringField('password')
+# 
+# # 创建一个实例：
+# u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
+# # 保存到数据库：
+# u.save()
 
-    def __init__(self, name, column_type):
-        self.name = name
-        self.column_type = column_type
 
-    def __str__(self):
-        return '<%s:%s>' % (self.__class__.__name__, self.name)
+'''
+21.classmethod
+'''
 
-class StringField(Field):
+# class Data_test2(object):
+#     day=0
+#     month=0
+#     year=0
+#     def __init__(self,year=0,month=0,day=0):
+#         self.day=day
+#         self.month=month
+#         self.year=year
+# 
+#     @classmethod
+#     def get_date(cls,string_date):
+#         #这里第一个参数是cls， 表示调用当前的类名
+#         year,month,day=map(int,string_date.split('-'))
+#         date1=cls(year,month,day)
+#         #返回的是一个初始化后的类
+#         return date1
+# 
+#     def out_date(self):
+#         print ("year :")
+#         print (self.year)
+#         print ("month :")
+#         print (self.month)
+#         print ("day :")
+#         print (self.day)
+# 
+# r = Data_test2.get_date("2018-6-4")
+# r.out_date()
 
-    def __init__(self, name):
-        super(StringField, self).__init__(name, 'varchar(100)')
 
-class IntegerField(Field):
+'''
+22.闭包
+'''
 
-    def __init__(self, name):
-        super(IntegerField, self).__init__(name, 'bigint')
+def adder(x):
+    def wrapper(y):
+        return x + y
+    return wrapper
 
-class ModelMetaclass(type):
+adder5 = adder(5)
+# 输出 15
+print(adder5(10))
+# 输出 11
+print(adder5(6))
 
-    def __new__(cls, name, bases, attrs):
-        if name=='Model':
-            return type.__new__(cls, name, bases, attrs)
-        print('Found model: %s' % name)
-        mappings = dict()
-        for k, v in attrs.items():
-            if isinstance(v, Field):
-                print('Found mapping: %s ==> %s' % (k, v))
-                mappings[k] = v
-        for k in mappings.keys():
-            attrs.pop(k)
-        attrs['__mappings__'] = mappings # 保存属性和列的映射关系
-        attrs['__table__'] = name # 假设表名和类名一致
-        return type.__new__(cls, name, bases, attrs)
+#__closure__判断是否为闭包
+print(adder.__closure__)
+print(adder5.__closure__)
+print(adder5.__closure__[0].cell_contents)
 
-class Model(dict, metaclass=ModelMetaclass):
 
-    def __init__(self, **kw):
-        super(Model, self).__init__(**kw)
 
-    def __getattr__(self, key):
-        try:
-            return self[key]
-        except KeyError:
-            raise AttributeError(r"'Model' object has no attribute '%s'" % key)
-
-    def __setattr__(self, key, value):
-        self[key] = value
-
-    def save(self):
-        fields = []
-        params = []
-        args = []
-        for k, v in self.__mappings__.items():
-            fields.append(v.name)
-            params.append('?')
-            args.append(getattr(self, k, None))
-        sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
-        print('SQL: %s' % sql)
-        print('ARGS: %s' % str(args))
-        
-        
-class User(Model):
-    # 定义类的属性到列的映射：
-    id = IntegerField('id')
-    name = StringField('username')
-    email = StringField('email')
-    password = StringField('password')
-
-# 创建一个实例：
-u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
-# 保存到数据库：
-u.save()
